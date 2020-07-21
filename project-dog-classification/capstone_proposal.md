@@ -1,6 +1,6 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
-Jong Lee
+Jong Lee  
 07/21/2020
 
 ## Proposal
@@ -56,6 +56,6 @@ The project will largely follow the detailed steps below:
 -----------
 
 
-<a name="f1">1</a>: D. Cheng, Y. Gong, S. Zhou, J. Wang, N. Zheng. "Person re-identification by multi- channel parts-based cnn with improved triplet loss function". Proc. of IEEE Conference on Computer Vision and Pattern Recognition (27-30 June 2016), 10.1109/CVPR.2016.149
-<a name="f2">2</a>: McBee, Morgan P., et al. "Deep learning in radiology." Academic radiology 25.11 (2018): 1472-1480.
-<a name="f3">3</a>: Chen, Hongming, et al. "The rise of deep learning in drug discovery." Drug discovery today 23.6 (2018): 1241-1250.
+<a name="f1">1</a>: D. Cheng, Y. Gong, S. Zhou, J. Wang, N. Zheng. "Person re-identification by multi- channel parts-based cnn with improved triplet loss function". Proc. of IEEE Conference on Computer Vision and Pattern Recognition (27-30 June 2016), 10.1109/CVPR.2016.149  
+<a name="f2">2</a>: McBee, Morgan P., et al. "Deep learning in radiology." Academic radiology 25.11 (2018): 1472-1480.  
+<a name="f3">3</a>: Chen, Hongming, et al. "The rise of deep learning in drug discovery." Drug discovery today 23.6 (2018): 1241-1250.  
