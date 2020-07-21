@@ -1,19 +1,16 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
-Joe Udacity  
-December 31st, 2050
+Jong Lee
+07/21/2020
 
 ## Proposal
-_(approx. 2-3 pages)_
 
 ### Domain Background
-_(approx. 1-2 paragraphs)_
 
 Image identification and classification has been one of the most prominent and rising Machine Learning research areas. Examples include self-driving cars recognizing cross streets and people<sup>[1](#f1)</sup>, as well as medical radiology to analyze MRI and CT scans<sup>[2](#f2)</sup>. Among many cases, animal recognition has bee one of the foundational use cases which set the groundwork for other image recognition use cases. While there are a range of Machine Learning algorithms that can solve this image recognition problem, neural networks have been one of the most prominent algorithms with the rise in computing power and GPUs<sup>[3](#f3)</sup>. Neural networks perform well not only in binary classification but also in multi-classification problems, especially with large amounts of data and features, which is typical of many image recognition problems. However, beyond image recognition we wish to test the effect of transfer learning in training other image recognition models as well.
 
 
 ### Problem Statement
-_(approx. 1 paragraph)_
 
 Largely, there are two problems we are aiming to solve:
 - **Dog breed classifier**: Given an image of a dog, identify the closest canine breed to that dog image.
@@ -21,7 +18,6 @@ Largely, there are two problems we are aiming to solve:
 
 
 ### Datasets and Inputs
-_(approx. 2-3 paragraphs)_
 
 The data we will use to train the models are images, as we are developing image recognition models. There are two types of images we are using: 1) dog images, and 2) human images. The images dataset was provided by Udacity.
 - **Dog images**: There are a total of 8351 dog images, which will be divided in to train, validation, and testing sets during the training of the model. Furthermore, there are 133 folders each corresponding to a different dog breed. The images are taken from a variety of angles, backgrounds, and sizes. Furthermore, one aspect to note is that some dog breeds have more images than others, resulting in not a uniformly balanced dataset.
@@ -29,7 +25,6 @@ The data we will use to train the models are images, as we are developing image 
 
 
 ### Solution Statement
-_(approx. 1 paragraph)_
 
 One solution we will be using to solve this image recognition problem is **Convolutional Neural Networks (CNN)**. A CNN is a deep neural network model which uses a combination of features, weights, and bias to output - in our case - a dog breed classification. Specifically in our project, our overall solution will involve multiple models, each develop in the steps below:
 1. Create a dog/human detector (whether an image is of a dog/human) using pre-trained models
@@ -39,17 +34,15 @@ One solution we will be using to solve this image recognition problem is **Convo
 These three models will output the different dog breeds, from which we can check how accurate our models were using evaluative metrics.
 
 ### Benchmark Model
-_(approximately 1-2 paragraphs)_
+
 Our benchmark generally would be a random guess. For our specific example, we have 133 dog breeds; a simple random guess would achieve 1/133, or 0.75% accuracy. However, since we are using a CNN (which should be better than a random guess), our test set accuracy should achieve at least 10% accuracy.  
 In the case of our transfer-learned model (not built from scratch), we would probably hope to achieve a better accuracy as we already have significant learnings from a prevoius model. Therefore, as a benchmark we would expect a test set accuracy of 60% or higher on our transfer-learned model.
 
 ### Evaluation Metrics
-_(approx. 1-2 paragraphs)_
 
 The initial, starting evaluative metric will be accuracy: that is, did we correctly predict/classify the true dog breed? However, one downside to note is that accuracy doesn't fully reflect the imbalance in our datasets, with more than 100 different dog breeds. Therefore, at least in terms of training the model, we will be using the widely recognized multi-class log loss function to train and evaluate the model as well. 
 
 ### Project Design
-_(approx. 1 page)_
 
 The project will largely follow the detailed steps below:
 1. Import the necessary datasets (dog and human images)
