@@ -1,13 +1,12 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
-Jong Lee
+Jong Lee  
 July 22, 2020
 
 ## I. Definition
-_(approx. 1-2 pages)_
 
 ### Project Overview
-Image identification and classification has been one of the most prominent and rising Machine Learning research areas. Examples include self-driving cars recognizing cross streets and people<sup>[1](#f1)</sup>, as well as medical radiology to analyze MRI and CT scans<sup>[2](#f2)</sup>. Among many cases, animal recognition has bee one of the foundational use cases which set the groundwork for other image recognition use cases. While there are a range of Machine Learning algorithms that can solve this image recognition problem, neural networks have been one of the most prominent algorithms with the rise in computing power and GPUs<sup>[3](#f3)</sup>. Neural networks perform well not only in binary classification but also in multi-classification problems, especially with large amounts of data and features, which is typical of many image recognition problems. In our project, we aim to illustrate the power of CNNs in classifying different dog breeds [dataset](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) and identifying breeds most resembling a given human image [dataset](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/lfw.zip). Additionally, beyond training a CNN from scratch we wish to test the effect of transfer learning in training other image recognition models as well.
+Image identification and classification has been one of the most prominent and rising Machine Learning research areas. Examples include self-driving cars recognizing cross streets and people<sup>[1](#f1)</sup>, as well as medical radiology to analyze MRI and CT scans<sup>[2](#f2)</sup>. Among many cases, animal recognition has bee one of the foundational use cases which set the groundwork for other image recognition use cases. While there are a range of Machine Learning algorithms that can solve this image recognition problem, neural networks have been one of the most prominent algorithms with the rise in computing power and GPUs<sup>[3](#f3)</sup>. Neural networks perform well not only in binary classification but also in multi-classification problems, especially with large amounts of data and features, which is typical of many image recognition problems. In our project, we aim to illustrate the power of CNNs in classifying different dog breeds [(dataset)](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip) and identifying breeds most resembling a given human image [(dataset)](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/lfw.zip). Additionally, beyond training a CNN from scratch we wish to test the effect of transfer learning in training other image recognition models as well.
 
 
 ### Problem Statement
@@ -25,35 +24,34 @@ Using either the model from 2) or 3) (whichever performs better), we can test ho
 ### Metrics
 One may initially choose accuracy as an evaluative metric of our models: that is, what % of the dog images did we corectly predict/classify the true dog breed? However, one downside to note is that accuracy doesn't fully reflect the imbalance in our datasets, with more than 100 different dog breeds; accuracy will have our models become biased towards the most common classes. Therefore while accuracy is a helpful measure to look at heuristically, we will be using the widely recognized multi-class log loss function to train the model, which will account for class imbalances. The loss can be described as:
 
-![LogLoss function](./images/LogLoss.png "Log Loss function")
+![LogLoss function](./images/LogLoss.PNG "Log Loss function")
 
 Where `x` is the list of predicted probabilities, and `class` is the numeric index of the true class.
 
 
 ## II. Analysis
-_(approx. 2-4 pages)_
 
 ### Data Exploration and Exploratory Visualization
 
 The data we will use to train the models are images, as we are developing image recognition models. There are two types of images we are using: 1) dog images, and 2) human images. The images dataset was provided by Udacity.
 - **Dog images**: There are a total of 8351 dog images. 6680 (80%) are training, 836 (10%) are in validation, and 835 (10%) are in testing sets. Furthermore, there are 133 folders each corresponding to a different dog breed. The images are taken from a variety of angles, backgrounds, and sizes. One important aspect to note is that some dog breeds have more images than others, resulting in a non-uniformly balanced dataset, as seen from the histogram below.
 
-![histogram](./images/hist_num_images_per_breed.png "Histogram of number of images per dog breed")
+![histogram](./images/hist_num_images_per_breed.PNG "Histogram of number of images per dog breed")
 
-![dog image 1](./images/American_water_spaniel_00648.png "American water Spaniel") ![dog image 2](./images/Brittany_02625.png "Brittany")
+![dog image 1](./images/American_water_spaniel_00648.jpg "American water Spaniel") ![dog image 2](./images/Brittany_02625.jpg "Brittany")
 
 
 - **Human images**: There are a total of 13233 human images, with 5750 different folders corresponding to different holders. Similar to the dog images dataset, the human images have different backgrounds and angles; however, they are all sized the same (250 X 250). Furthermore, again like the dog images dataset, the human images dataset is not uniformly balanced, as some humans have more training images than others. This is imbalance in human image distributions is particularly worse, as seen from the histogram below:
 
-![histogram human](.images/hist_num_images_per_human.png "Histogram of number of images per human")
+![histogram human](.images/hist_num_images_per_human.PNG "Histogram of number of images per human")
 
 There seems to be some folks who have > 100 number of images to them, which are outliers. The following humans are listed below:
 
-![outlier human table](.images/outlier_humans.png "Humans with large number of images")
+![outlier human table](.images/outlier_humans.PNG "Humans with large number of images")
 
 It makes sense that people like George Bush or Colin Powell have large number of images attributed to them, as they are one of the most famous people in the world. That being said, while this imbalance is worse in the humans dataset than in the dogs dataset, it is less of an issue for our project, as the human images are **not** used as any sort of training inputs to any of the models; they are merely used at the end as inputs to test which dogs resemble these humans the most. Therefore, we can move on with the algorithm of the CNN training model.
 
-![human image 1](.images/George_W_Bush_0015.png "George Bush") ![human image 2](.images/Colin_Powell_0028.png "Colin Powell")
+![human image 1](.images/George_W_Bush_0015.jpg "George Bush") ![human image 2](.images/Colin_Powell_0028.jpg "Colin Powell")
 
 
 ### Algorithms and Techniques
