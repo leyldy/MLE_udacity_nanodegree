@@ -43,15 +43,15 @@ The data we will use to train the models are images, as we are developing image 
 
 - **Human images**: There are a total of 13233 human images, with 5750 different folders corresponding to different holders. Similar to the dog images dataset, the human images have different backgrounds and angles; however, they are all sized the same (250 X 250). Furthermore, again like the dog images dataset, the human images dataset is not uniformly balanced, as some humans have more training images than others. This is imbalance in human image distributions is particularly worse, as seen from the histogram below:
 
-![histogram human](.images/hist_num_images_per_human.PNG "Histogram of number of images per human")
+![histogram human](./images/hist_num_images_per_human.PNG "Histogram of number of images per human")
 
 There seems to be some folks who have > 100 number of images to them, which are outliers. The following humans are listed below:
 
-![outlier human table](.images/outlier_humans.PNG "Humans with large number of images")
+![outlier human table](./images/outlier_humans.PNG "Humans with large number of images")
 
 It makes sense that people like George Bush or Colin Powell have large number of images attributed to them, as they are one of the most famous people in the world. That being said, while this imbalance is worse in the humans dataset than in the dogs dataset, it is less of an issue for our project, as the human images are **not** used as any sort of training inputs to any of the models; they are merely used at the end as inputs to test which dogs resemble these humans the most. Therefore, we can move on with the algorithm of the CNN training model.
 
-![human image 1](.images/George_W_Bush_0015.jpg "George Bush") ![human image 2](.images/Colin_Powell_0028.jpg "Colin Powell")
+![human image 1](/images/George_W_Bush_0015.jpg "George Bush") ![human image 2](./images/Colin_Powell_0028.jpg "Colin Powell")
 
 
 ### Algorithms and Techniques
