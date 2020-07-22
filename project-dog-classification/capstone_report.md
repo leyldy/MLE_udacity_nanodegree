@@ -77,64 +77,136 @@ In the case of our transfer-learned model (not built from scratch), we would pro
 _(approx. 3-5 pages)_
 
 ### Data Preprocessing
-In this section, all of your preprocessing steps will need to be clearly documented, if any were necessary. From the previous section, any of the abnormalities or characteristics that you identified about the dataset will be addressed and corrected here. Questions to ask yourself when writing this section:
-- _If the algorithms chosen require preprocessing steps like feature selection or feature transformations, have they been properly documented?_
-- _Based on the **Data Exploration** section, if there were abnormalities or characteristics that needed to be addressed, have they been properly corrected?_
-- _If no preprocessing is needed, has it been made clear why?_
+For the detector algorithms, a couple of preprocessing steps were required, namely:
+- Grayscaling the image
+- Resizing the image to 224 X 224
+- Normalizing the image by a specific mean and standard deviation (as required by VGG-16)
+
+As for our own CNN neural network models, different data preprocessing steps were applied for different sets:
+- For training set:
+	- Randomly resize and crop each image to 224 size
+	- Randomly flip image horizontally with a probability of 30%
+	- Convert image to a tensor
+	- Normalize the image
+- For testing and validation set:
+	- Resize image to 224 X 224
+	- Convert image to a tensor
+	- Normalize the image
+
+Random transformations were specifically applied to the training set in order to avoid overfitting. These transformations to the image may help the model become more robust to random angles/rotations of human and dog photos we could see in a normal day. As for the validation & testing set, I did not perturb the data further because we want our algorithm to focus on predicting the main, true image without random changes/transformations.
+
+In terms of the image size, I decided to choose 224 X 224 because that seemed to be the norm (besides 256 X 256) and the image size which performed well in predictions. Furthermore, the normalization seemed to help with the predictions and minimizing outlier images' effects on the model.
+
+Finally, while we did see some imbalance in the dogs dataset, I did not feel it was extremely skewed/imbalanced to the point the cross entropy multi class log loss would be able to handle it. Therefore, I did not make specific data preprocessing steps specific to class imbalance.
 
 ### Implementation
-In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
-- _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
-- _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
-- _Was there any part of the coding process (e.g., writing complicated functions) that should be documented?_
+
+
+#### Structure of the layers
+The dog and human detector models were largely based on pre-trained models (VGG16 and Haar classifier), and hence required minimal implementation besides data preprocessing.
+
+For the ground-up CNN, there were multiple layers and types of layers that were interconnected. First, for the CNN layers, it was structured as the following:
+- 1st CNN layer: 3 input channels, 32 output channels, 3x3 kernel size, stride=1, padding=1
+- 2nd CNN layer: 32 input channels, 64 output channels, 3x3 kernel size, stride=1, padding=1
+- 3rd CNN layer: 64 input channels, 128 output channels, 6x6 kernel size, stride=2, padding=2
+
+Each CNN layer underwent a ReLU activation function and maxpooling with 2x2 kernel size and stride=2, effectively reducing the dimensions of the output from the layers by half. Specifically for 3rd CNN, it also went through a batch normalization in order to increase speed and efficiency in training. Furthermore, a larger kernel size and stride was chosen for the 3rd CNN layer in order to reduce overfitting and combine a more average effect in feature identification.
+
+Next, the output from the 3rd CNN layer was flattened to be fed into the fully connected layers.
+
+The fully connected layers consisted of three layers:
+- 1st fully connected layer: 25088 input features, 256 output features
+- dropout layer (with probability of 0.25)
+- 2nd fully connected layer: 256 input features, 133 output features.
+
+The 1st fully connected layer had ReLU activation function and batch normalization in order for increased efficiency in training. The dropout layer was used in order to minimize overfitting. Lastly, the 2nd fully connected layer outputed 133 features which corresponded to the 133 different dog breeds. No ReLU or Softmax activation function was required in the 2nd layer, as the `CrossEntropyLoss` loss function already takes care of it.
+
+
+#### Loss function and optimizer
+Once the structure of the layers were defined, we had to choose an appropriate loss and optimizer function. The loss function chosen was `CrossEntropyLoss` which was PyTorch's version of Multi class log loss function. As explained above, this loss function was chosen because of the multi-class type of problem and the slight class imbalance that persisted in the dataset.
+
+The optimizer chosen was the Adam optimizer also imported from PyTorch - this is a very popular and successful optimizer for multi-class image recognition problems, and hence was chosen.
+
+Through this process, we calculated the train and validation loss. Whenever the validation loss was lower than the previous minimum validation loss, we saved our new updated model. While the training was set for 100 epochs, I stopped training at around 20 epochs as the validation loss I believed was sufficient to achieve significantly better metrics than our benchmark metrics.
+
+### Technology/Backend
+Building of the neural network largely was conducted through defining a custome PyTorch Net class which was a subclass of the `nn.Module`. 
+
+
 
 ### Refinement
-In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
-- _Has an initial solution been found and clearly reported?_
-- _Is the process of improvement clearly documented, such as what techniques were used?_
-- _Are intermediate and final solutions clearly reported as the process is improved?_
+
+While the ground-up CNN model has some success in accurately predicting dog breeds (see results below), I wanted to test whether transfer learning would help significantly improve the performance. The ground-up CNN model was a model built based on my instinctions and some best practices, and on top of it only around 6000 dog images; however, there must be models already out there that are well-tested and trained on millions of images.
+
+One of those models was the ResNet50 model, which was a 50-layer neural network model trained on millions of images from ImageNet. To test whether I could use this pre-trained model to improve results, I used transfer learning to edit the last layre of the ResNet50 model to output our 133 different dog breed as features, and saw immense improvements, as illustrated in the results section below.
+
 
 
 ## IV. Results
 _(approx. 2-3 pages)_
 
 ### Model Evaluation and Validation
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
+
+For the human face detector model, it had a 98% true positive rate (i.e. predicted 98 out of 100 true human faces as human faces.), and a 83% true negative rate (i.e. predicted 83 out of 100 non-human (dog) faces as non-human). While the true negative rate is somewhat disappointing, I took into consideration the fact that these metrics were calculated on the first 100 images fed into the models, and given the robustness of the OpenCV implementation of this Haas classifier, it was sufficient enough.
+
+As for the dog detector model, it had a 100% true positive rate, and a 97% true negative rate on the first 100 dog images fed into the model which was sufficient. This may potentially be due to the fact that human faces are potentially more varied than dog faces, but that may be a speculation that could be tested later in the future.
+
+For the dog classification CNN models, the final model was chosen after a number of epochs based on an out-of-sample validation set. An out-of-sample validation set was purposefully set and was absolutely necessary in order to avoid overfitting by evaluating on a training set. The validation loss was updated whenever we chose a newer, better model based on the validation Cross Entropy Loss as number of epochs increased. The model seemed to be meeting and exceeding our expectations, as illustrated below:
+- For the ground-up CNN model after 22 epochs, it had a validation loss of 3.269494, and when used on a test set, the test loss was 3.281111 and test accuracy was 23%. 
+- For the transfer-learning model after 20 epochs, it had a validation loss of 0.56974369, and a test loss of 0.579424 and test accuracy of 82%.
+
 
 ### Justification
-In this section, your model’s final solution and its results should be compared to the benchmark you established earlier in the project using some type of statistical analysis. You should also justify whether these results and the solution are significant enough to have solved the problem posed in the project. Questions to ask yourself when writing this section:
-- _Are the final results found stronger than the benchmark result reported earlier?_
-- _Have you thoroughly analyzed and discussed the final solution?_
-- _Is the final solution significant enough to have solved the problem?_
+
+The final results from the dog classification CNN models well exceeded our benchmark of a random guess, which would have achied <1% accuracy. In contrast, the built-from-scratch CNN model achieved a 23% accuracy. Furthermore, this was only after 22 epochs, which suggests that potentially after more iterations/epochs the performance can be much better.
+
+The transfer-learned model well outperformed even our ground-up CNN model, with a test accuracy of 82%. While one may suggest that this may potentially be due to the model overindexing on dog breeds with large number of images, the test loss was also significantly minimal, and there wasn't a huge imbalance in our dog dataset. Hence, I believe these results are reliable and that the transfer-learned model is performing very well. Additionally from an outside-in perspective, this transfer-learned Resnet50 model was built on top of millions of images and thousands of seasoned researchers' work, and intuitively should be performing very well.
+
+Therefore, I believe that both models, but especially the transfer-learned model, achieves our goal of creating a high-performing dog prediction classifier using image data.
 
 
 ## V. Conclusion
 _(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+Using our transfer-learned dog classification model, we created a mini-app which - given an image - would 1) identify whether the image represents a human or a dog, and 2) output which dog breed the images resembles the most. See outputs below:
+
+![app image 1](./images/human_predict_app.PNG "Human prediction from app") ![app image 2](./images/dog_predict_app.PNG "Dog prediction from app")
+
+
+
 
 ### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+
+Overall, this project aimed to create a performing classifier which identified most resembling dog breeds given an image. The project had multiple components:
+- A detection model which identified whether an image was an image of a dog, or a human
+- A classification model which identified the most closely resembling dog breed given an image of a dog or a human
+- A mini-"app" connecting the two models
+
+In particular, building the model from scratch was difficult because there are many different ways to set up a CNN layer. It was difficult choosing what input channels, output channels, strides, kernel size, padding, etc to choose to make sure the model performed; perhaps that's why transfer learning is so popular because instead of relying on one person to verify his/her selection of the layer construction, there already is a well-performing network structure. Another difficult aspect was checking the dimensions/size of the layers - in some cases PyTorch would automatically handle the dimensions in respect to the batch size, but once flattening and feeding into the fully connected layer process was happening I had to manually ensure dimensions were of the correct size. 
+
+The most interesting aspect of the study was definitely how effective the transfer learning model was - I was surprised by just changing one final fully connected layer from a pre-trained resnet50 model achieved so much better results than the built from scratch model which I put many hours into.
+
+However overall through this process, I believe that the final transfer-learned model solved our original problem effectively of identifying most resembling dog breeds.
+
 
 ### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
+
+There are definitely ways to improve upon this project and the performance of the models.
+
+First, more, and uniformed training data would definitely help with the training of the model built from scratch - we only had around 6000 images to train on top of, and 133 dog breeds to classify. 133 dog breeds is quite a lot, and hence accuracy did suffer consequentially. 
+
+Additionally, more image/data augmentation or random transformations would help with the overfitting from the training set. While that wasn't clearly apparent in our project, in order for us to ensure that this model will work on other dog images, such transformations would definitely help significantly.
+
+In terms of creating the model, perhaps some sort of a CV operation to choose the best parameters would help in choosing the right layers/parameters, as those were manually hand-picked by me. While the models did perform way better than the benchmark numbers, I believe there is still room for improvement if we had done extensive hyperparameter tuning.
+
+Lastly, perhaps testing other pre-trained models besides Resnet50 (i.e. VGG, ResNet101, etc) would help test out what model would be best to transfer learn from. 
 
 -----------
+
+<a name="f1">1</a>: D. Cheng, Y. Gong, S. Zhou, J. Wang, N. Zheng. "Person re-identification by multi- channel parts-based cnn with improved triplet loss function". Proc. of IEEE Conference on Computer Vision and Pattern Recognition (27-30 June 2016), 10.1109/CVPR.2016.149  
+<a name="f2">2</a>: McBee, Morgan P., et al. "Deep learning in radiology." Academic radiology 25.11 (2018): 1472-1480.  
+<a name="f3">3</a>: Chen, Hongming, et al. "The rise of deep learning in drug discovery." Drug discovery today 23.6 (2018): 1241-1250.  
 
 **Before submitting, ask yourself. . .**
 
