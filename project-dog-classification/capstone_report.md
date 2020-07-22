@@ -74,7 +74,6 @@ In the case of our transfer-learned model (not built from scratch), we would pro
 
 
 ## III. Methodology
-_(approx. 3-5 pages)_
 
 ### Data Preprocessing
 For the detector algorithms, a couple of preprocessing steps were required, namely:
@@ -143,7 +142,6 @@ One of those models was the ResNet50 model, which was a 50-layer neural network 
 
 
 ## IV. Results
-_(approx. 2-3 pages)_
 
 ### Model Evaluation and Validation
 
@@ -166,7 +164,6 @@ Therefore, I believe that both models, but especially the transfer-learned model
 
 
 ## V. Conclusion
-_(approx. 1-2 pages)_
 
 ### Free-Form Visualization
 Using our transfer-learned dog classification model, we created a mini-app which - given an image - would 1) identify whether the image represents a human or a dog, and 2) output which dog breed the images resembles the most. See outputs below:
