@@ -51,7 +51,7 @@ There seems to be some folks who have > 100 number of images to them, which are 
 
 It makes sense that people like George Bush or Colin Powell have large number of images attributed to them, as they are one of the most famous people in the world. That being said, while this imbalance is worse in the humans dataset than in the dogs dataset, it is less of an issue for our project, as the human images are **not** used as any sort of training inputs to any of the models; they are merely used at the end as inputs to test which dogs resemble these humans the most. Therefore, we can move on with the algorithm of the CNN training model.
 
-![human image 1](/images/George_W_Bush_0015.jpg "George Bush") ![human image 2](./images/Colin_Powell_0028.jpg "Colin Powell")
+![human image 1](./images/George_W_Bush_0015.jpg "George Bush") ![human image 2](./images/Colin_Powell_0028.jpg "Colin Powell")
 
 
 ### Algorithms and Techniques
